@@ -111,4 +111,18 @@ contract agrimarket
         }
     }
 
+    /* function to update the price of a product */
+    function updatePrice(uint256 id_,uint256 newPrice_) public{
+        for(uint256 i = 0;i < Products.length;i++) 
+            if(Products[i].productID == id_)
+                Products[i].price = newPrice_;
+    }
+
+    /* function to update the quantity of a product */
+    function updateQuantity(uint256 id_,uint256 newQuant_) public {
+        for(uint256 i = 0;i < Products.length;i++)
+            if(Products[i].productID == id_)
+                Products[i].quantity = newQuant_;
+    }
+
 }
