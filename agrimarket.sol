@@ -7,10 +7,12 @@ contract agrimarket
     {
         address sellerAdd;
         string name;
+        // uint256 balance;
     }
     Seller[] sellers;
     // track what the seller sells
     mapping(address => mapping(uint256 => uint256)) itemssold;
+    // mapping(address => Product) itemssold;
 
     struct Customer
     {
@@ -20,6 +22,7 @@ contract agrimarket
     Customer[] customers;
     // track what the customer buys
     mapping(address => mapping(uint256 => uint256)) itemsbought;
+    // mapping(address => Product) itemsbought;
 
     struct Product
     {
@@ -31,6 +34,8 @@ contract agrimarket
     }
     Product[] Products;
 
+    /* might use this later 
+
     struct Transaction
     {
         uint256 productID;
@@ -39,6 +44,8 @@ contract agrimarket
         address customer;
         uint256[] itemsBought;
     }
+
+    */
 
     /* function to set seller */
     function setSeller(address sellerAddress, string memory sellerName) public {
@@ -123,12 +130,12 @@ contract agrimarket
 
         for(i = 0;i < customers.length; i++) {
             if (customers[i].customerAdd == customer)
-                itemsbought[customer][id_] = quant;
+                itemsbought[customer][id_] = quant; // add to the list of items the customer has bought
                 break;
         }
 
         uint256 remainingQuant = Products[pos].quantity - quant;
-        itemssold[Products[pos].Seller][id_] = remainingQuant;
-        Products[pos].quantity -= quant;
+        itemssold[Products[pos].Seller][id_] = remainingQuant; // add to the list of items the seller is selling
+        Products[pos].quantity -= quant; // reflect the new quantity of the product in the products side
     }
 }
