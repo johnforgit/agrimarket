@@ -34,6 +34,11 @@ contract agrimarket
     }
     Product[] Products;
 
+    modifier onlySeller() {
+        require(sellers[0].sellerAdd == msg.sender);
+        _;
+    }
+
     /* might use this later 
 
     struct Transaction
@@ -46,6 +51,7 @@ contract agrimarket
     }
 
     */
+    event purchase(uint256 id, address buyer, uint quantity);
 
     /* function to set seller */
     function setSeller(address sellerAddress, string memory sellerName) public {
@@ -84,7 +90,7 @@ contract agrimarket
     }
 
     /* function to set a product */
-    function setProduct(uint256 id, string memory name, uint256 price, uint256 quant, address seller_) public {
+    function setProduct(uint256 id, string memory name, uint256 price, uint256 quant, address seller_) public onlySeller {
         Products.push(Product(id, name, price, quant, seller_));
     }
 
@@ -101,7 +107,7 @@ contract agrimarket
     }
 
     /* function to update the price of a product */
-    function updatePrice(uint256 id_, uint256 newPrice_) public {
+    function updatePrice(uint256 id_, uint256 newPrice_) public onlySeller{
         for (uint256 i = 0; i < Products.length; i++) 
             if (Products[i].productID == id_)
                 Products[i].price = newPrice_;
@@ -115,7 +121,7 @@ contract agrimarket
     }
 
     /* function to buy a product */
-    function buy(address customer,uint256 quant,uint256 id_) public {
+    function buy(address customer,uint256 quant,uint256 id_) external payable{
         uint256 i;
         uint256 pos;
         for(i = 0;i < Products.length; i++)
@@ -137,5 +143,6 @@ contract agrimarket
         uint256 remainingQuant = Products[pos].quantity - quant;
         itemssold[Products[pos].Seller][id_] = remainingQuant; // add to the list of items the seller is selling
         Products[pos].quantity -= quant; // reflect the new quantity of the product in the products side
+        emit purchase(id_, customer, quant);
     }
 }
